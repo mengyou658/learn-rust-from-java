@@ -1,16 +1,17 @@
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.math.MathUtil;
+import cn.hutool.core.util.ArrayUtil;
 import com.alibaba.fastjson.JSON;
 import org.apache.lucene.util.RamUsageEstimator;
 
 import java.lang.instrument.Instrumentation;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Test {
-
     public static void main(String[] args) {
         int x = 16;
 //        int x = 16;
@@ -56,7 +57,7 @@ public class Test {
         assert 0.1 + 0.2 == 0.3;
 
         // 字符
-        // utf8 2-4字节
+        // utf8 1-4字节
         jinzhi_char = '中';
 
         String s = new String(new char[]{jinzhi_char});
@@ -70,7 +71,15 @@ public class Test {
         StringBuilder 字符串 = new StringBuilder("str");
 
         // 数组
-        List<String> 数组 = new ArrayList<>();
+        int[] 数组 = new int[10];
+        int[] 数组1 = new int[]{1, 2, 3, 4, 5};
+        // 动态数组Vector
+        List<String> 集合 = new ArrayList<>();
+        List<Integer> 集合1 = Arrays.asList(1,2,3,4);
+        // set
+        Set<String> set = new HashSet<>();
+        // map
+        Map<String, String> map = new HashMap<>();
 
     }
 
@@ -78,5 +87,109 @@ public class Test {
         x += 1;
         y += 5;
         return x + y;
+    }
+
+    class User {
+        public boolean active;
+        public String username;
+        public String email;
+        public Long sign_in_count;
+
+        User testNewUser() {
+            User user = new User();
+            user.active = true;
+            user.sign_in_count = 1L;
+            user.email = "someone@example.com";
+            user.username = "someusername123";
+            return user;
+        }
+    }
+
+    // 枚举
+    enum PokerSuit {
+        Clubs,
+        Spades,
+        Diamonds,
+        Hearts,
+    }
+
+    // 数组
+    void java_array() {
+        int[] a = {1, 2, 3, 4, 5};
+        int[] b = new int[5];
+        Arrays.fill(b, 3);
+    }
+
+    // 流程控制
+    void test_control() {
+        boolean condition = true;
+        int number = 0;
+        if (condition) {
+            number = 5;
+        } else {
+            number = 6;
+        }
+        System.out.println("The value of number is: " + number);
+        for (int i = 0; i < 5; i++) {
+            System.out.println(i);
+        }
+        int[] a = {4, 3, 2, 1};
+        for (int i = 0; i < a.length; i++) {
+            System.out.println(String.format("第%d个元素是%d", i + 1, a[i]));
+        }
+        PokerSuit dire = PokerSuit.Clubs;
+        switch (dire) {
+            case Clubs:
+                System.out.println("Clubs");
+                break;
+            case Spades:
+            case Hearts:
+                System.out.println("Spades or Hearts");
+                break;
+            default:
+                System.out.println("Diamonds");
+                break;
+        }
+    }
+}
+
+class Circle<M> {
+    public double x;
+    public double y;
+    public double radius;
+
+    public Circle(double x, double y, double radius) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+    }
+
+    public double area() {
+        return Math.PI * (this.radius * this.radius);
+    }
+
+    public <T extends Number> BigDecimal add(T a, T b) {
+        return BigDecimal.valueOf(a.doubleValue()).add(BigDecimal.valueOf(b.doubleValue()));
+    }
+}
+
+// interface
+interface Summary {
+    String summarize();
+}
+
+class Post implements Summary {
+
+    private String title;
+    private String author;
+    private String content;
+
+    @Override
+    public String summarize() {
+        return String.format("文章%s, 作者是%s", this.title, this.author);
+    }
+
+    public void test_panic() {
+        throw new RuntimeException("crash and burn");
     }
 }
