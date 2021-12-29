@@ -1,6 +1,7 @@
 use std::collections::{HashMap, HashSet};
 use std::error::Error;
 use std::fmt::{Debug, Display};
+use std::mem;
 use std::net::{AddrParseError, IpAddr, SocketAddr};
 
 fn main() {
@@ -289,3 +290,22 @@ fn test_panic() {
 fn test_result() -> Result<SocketAddr, AddrParseError> {
     "127.0.0.1".parse::<SocketAddr>()
 }
+// 生命周期 引用的生命周期
+fn test_yinyong0(a: &str, b: &str) -> String {
+    a.to_string() + b
+}
+fn test_yinyong1<'a, 'b>(a: &'a str, b: &'b str) -> String {
+    a.to_string() + b
+}
+// 这个编译会失败，编译器会提示
+// fn test_yinyong21(a: &str, b: &str) -> &str {
+//     (a.to_string() + b).as_str()
+// }
+// 上面不写生命周期标识，默认是这样的，会看到，a和b的生命周期不一致，但是返回的时候却使用里面的内容
+// fn test_yinyong210<'a, 'b>(a: &'a str, b: &'b str) -> &'a str {
+//     (a.to_string() + b).as_str()
+// }
+// cannot return reference to temporary value
+// fn test_yinyong22<'a>(a: &'a str, b: &'a str) -> &'a str {
+//     (a.to_string() + b).as_str()
+// }
